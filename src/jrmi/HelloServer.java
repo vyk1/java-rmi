@@ -2,30 +2,41 @@ package jrmi;
 
 import java.rmi.*;
 import java.rmi.server.*;
-import java.rmi.registry.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class HelloServer implements HelloWorld {
-	public HelloServer() {
+public class HelloServer extends UnicastRemoteObject implements HelloRemoteInterface {
+	private static final long serialVersionUID = 1L;
+
+	public HelloServer() throws RemoteException {
+		super();
 	}
 
 	public static void main(String[] args) {
 		try {
-			// Instancia o objeto servidor e a sua stub
-			HelloServer server = new HelloServer();
-			HelloWorld stub = (HelloWorld) UnicastRemoteObject.exportObject(server, 0);
-			// Registra a stub no RMI Registry para que ela seja obtida pelos clientes
-			Registry registry = LocateRegistry.getRegistry();
-			registry.bind("Hello", stub);
+			Naming.rebind("//localhost/HS", new HelloServer());
 			System.out.println("Servidor pronto");
 		} catch (Exception ex) {
+			System.err.println("Ops");
 			ex.printStackTrace();
 		}
 	}
 
 	@Override
-	public String hello() throws RemoteException {
-		System.out.println("Executando hello() overrode");
-		return "Hello!!!";
+	public String hello(String name, String message) {
+		try {
+			System.out.println("Teste");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("' no dia ' dd/MM/yyyy ' às ' HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			String concated = name + " disse " + message + dtf.format(now);
+			System.out.println(concated);
+			return concated;
+		} catch (Exception e) {
+			System.err.println("Ops");
+			e.printStackTrace();
+			return "Ocorreu um erro";
+		}
+
 	}
 
 }

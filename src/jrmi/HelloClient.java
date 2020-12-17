@@ -1,20 +1,25 @@
 package jrmi;
 
-import java.rmi.registry.*;
+import java.rmi.Naming;
+
+import javax.swing.JOptionPane;
 
 public class HelloClient {
+	private static HelloRemoteInterface look_up;
+
 	public static void main(String[] args) {
-		String host = (args.length < 1) ? null : args[0];
 		try {
 			// Obtém uma referência para o registro do RMI
-			Registry registry = LocateRegistry.getRegistry(host);
+			look_up = (HelloRemoteInterface) Naming.lookup("//localhost/HS");
+			
+			String name = JOptionPane.showInputDialog("Um nome");
 
-			// Obtém a stub do servidor
-			HelloWorld stub = (HelloWorld) registry.lookup("Hello");
+			String message = JOptionPane.showInputDialog("Uma mensagem");
 
-			// Chama o método do servidor e imprime a mensagem
-			String msg = stub.hello();
-			System.out.println("Mensagem do Servidor: " + msg);
+			String response = look_up.hello(name, message);
+			System.out.println(response);
+			JOptionPane.showMessageDialog(null, response);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
