@@ -10,11 +10,11 @@ public class HelloClient {
 			Registry registry = LocateRegistry.getRegistry(host);
 
 			// Obtém a stub do servidor
-//			HelloWorld stub = (HelloWorld) registry.lookup("Hello");
+			HelloWorld stub = (HelloWorld) registry.lookup("Hello");
 
 			// Chama o método do servidor e imprime a mensagem
-//			String msg = stub.hello();
-			System.out.println("Mensagem do Servidor: ");
+			String msg = stub.hello();
+			System.out.println("Mensagem do Servidor: " + msg);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

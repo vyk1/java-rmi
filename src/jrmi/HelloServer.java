@@ -24,7 +24,7 @@ public class HelloServer implements HelloWorld {
 
 	@Override
 	public String hello() throws RemoteException {
-		System.out.println("Executando hello()");
+		System.out.println("Executando hello() overrode");
 		return "Hello!!!";
 	}
 
